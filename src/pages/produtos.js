@@ -26,7 +26,7 @@ const CadastroProduto = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post('http://177.153.51.205:3000/produtos', formData);
+      const response = await axios.post('/api/produtos', formData);
       alert('Produto cadastrado com sucesso!');
       console.log(response.data); // Exibe a resposta da API
     } catch (error) {
