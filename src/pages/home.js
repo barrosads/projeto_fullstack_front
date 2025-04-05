@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 function Home() {
     return (
       <div className="container">
-        <img src={imagemlado }/>
+       <img src={imagemlado} alt="Ilustração sobre escolha de estoque" />
         <div  className="itens">
           <div className="subitens">
          <Link to="/cad_produtos">Cadastrar Produtos</Link>
