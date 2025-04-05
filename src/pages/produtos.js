@@ -30,8 +30,8 @@ const CadastroProduto = () => {
       alert('Produto cadastrado com sucesso!');
       console.log(response.data); // Exibe a resposta da API
     } catch (error) {
-      alert('Erro ao cadastrar produto!');
-      console.error(error);
+      console.error("Erro ao cadastrar produto:", error.response ? error.response.data : error.message);
+      alert(`Erro ao cadastrar produto: ${error.response ? JSON.stringify(error.response.data) : error.message}`);
     }
   };
 
