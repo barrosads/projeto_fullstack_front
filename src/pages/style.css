@@ -25,6 +25,7 @@ img{
 
 h2{
     color: rgb(8, 27, 43);
+    margin-top: 20px;
 }
 .itens{
     display: flex;
