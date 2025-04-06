@@ -24,7 +24,7 @@ img{
 }
 
 h2{
-    color: aliceblue;
+    color: rgb(8, 27, 43);
 }
 .itens{
     display: flex;
@@ -61,7 +61,7 @@ table, td, th {
   table {
     border-collapse: collapse;
     width: 100%;
-    margin-top: 15%;
+    margin-top: 15px;
   }
   thead{
       background-color: rgb(14, 14, 65);
