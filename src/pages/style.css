@@ -61,7 +61,11 @@ table, td, th {
   td {
     text-align: center;
   }
-  
+.relatorioestoque{
+    margin-left: 10%;
+    margin-right: 10%;
+}
+
 blocks{
     display: flex;
     flex-direction: column;

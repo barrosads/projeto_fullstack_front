@@ -48,7 +48,7 @@ const EstoqueMovimentacoes = () => {
   };
 
   return (
-    <div>
+    <div className="relatorioestoque">
       <h2>Movimentações de Estoque</h2>
       {error ? (
         <p style={{ color: "red" }}>{error}</p>
