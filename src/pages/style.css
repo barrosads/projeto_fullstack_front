@@ -55,7 +55,7 @@ a{
 }
 table, td, th {
     border: 1px solid black;
-    background-color: rgb(14, 14, 65);
+
   }
   
   table {
@@ -63,7 +63,11 @@ table, td, th {
     width: 100%;
     margin-top: 15%;
   }
-  
+  thead{
+      background-color: rgb(14, 14, 65);
+      color: aliceblue;
+  }
+
   td {
     text-align: center;
   }
