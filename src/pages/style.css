@@ -49,6 +49,19 @@ a{
     text-align: center;
     text-decoration: none;
 }
+table, td, th {
+    border: 1px solid black;
+  }
+  
+  table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+  
+  td {
+    text-align: center;
+  }
+  
 blocks{
     display: flex;
     flex-direction: column;
