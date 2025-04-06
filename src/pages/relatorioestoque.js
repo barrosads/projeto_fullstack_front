@@ -1,20 +1,51 @@
 import { useEffect, useState } from "react";
 
-export default function StockMovements() {
-  const [movements, setMovements] = useState([]);
+const EstoqueMovimentacoes = () => {
+  const [movimentacoes, setMovimentacoes] = useState([]);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch("/api/movimentacoes")
-      .then((response) => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch("/api/estoquemovimentacao");
         if (!response.ok) {
           throw new Error("Erro ao carregar os dados");
         }
-        return response.json();
-      })
-      .then((data) => setMovements(data))
-      .catch((err) => setError(err.message));
+        const data = await response.json();
+
+        const produtosResponse = await fetch("/api/produtos");
+        if (!produtosResponse.ok) {
+          throw new Error("Erro ao carregar os produtos");
+        }
+        const produtos = await produtosResponse.json();
+
+        const movimentacoesComProdutos = data.map((mov) => {
+          const produto = produtos.find((p) => p.id === mov.produto_id);
+          return { ...mov, produtoNome: produto ? produto.nome : "Desconhecido" };
+        });
+
+        setMovimentacoes(movimentacoesComProdutos);
+      } catch (err) {
+        setError(err.message);
+      }
+    };
+
+    fetchData();
   }, []);
+
+  const handleDelete = async (id) => {
+    try {
+      const response = await fetch(`/api/estoquemovimentacao/${id}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) {
+        throw new Error("Erro ao deletar a movimentação");
+      }
+      setMovimentacoes(movimentacoes.filter((mov) => mov.id !== id));
+    } catch (err) {
+      setError(err.message);
+    }
+  };
 
   return (
     <div>
@@ -27,28 +58,30 @@ export default function StockMovements() {
             <tr>
               <th>ID</th>
               <th>Produto</th>
+              <th>Tipo</th>
               <th>Quantidade</th>
               <th>Data</th>
+              <th>Ações</th>
             </tr>
           </thead>
           <tbody>
-            {movements.length > 0 ? (
-              movements.map((mov) => (
-                <tr key={mov.id}>
-                  <td>{mov.id}</td>
-                  <td>{mov.produto || "N/A"}</td>
-                  <td>{mov.quantidade}</td>
-                  <td>{mov.data ? new Date(mov.data).toLocaleDateString() : "Data inválida"}</td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="4">Nenhum dado disponível</td>
+            {movimentacoes.map((mov) => (
+              <tr key={mov.id}>
+                <td>{mov.id}</td>
+                <td>{mov.produtoNome}</td>
+                <td>{mov.tipo}</td>
+                <td>{mov.quantidade}</td>
+                <td>{new Date(mov.createdAt).toLocaleDateString()}</td>
+                <td>
+                  <button onClick={() => handleDelete(mov.id)}>Deletar</button>
+                </td>
               </tr>
-            )}
+            ))}
           </tbody>
         </table>
       )}
     </div>
   );
-}
+};
+
+export default EstoqueMovimentacoes;
