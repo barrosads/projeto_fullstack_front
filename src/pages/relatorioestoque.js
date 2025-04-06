@@ -49,6 +49,7 @@ const EstoqueMovimentacoes = () => {
 
   return (
     <div className="relatorioestoque">
+    <Link className="linkform" to="/"> Página inicial</Link>
       <h2>Movimentações de Estoque</h2>
       {error ? (
         <p style={{ color: "red" }}>{error}</p>
