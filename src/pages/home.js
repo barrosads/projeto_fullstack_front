@@ -22,8 +22,7 @@ function Home() {
         <fieldset className="itens"> 
        <legend>Relatórios</legend>
           <div className="subitens">
-         <Link to="/cad_produtos">Lista de Clientes</Link>
-         <Link to="/cad_fornecedores">Movimentações de Estoque</Link>
+         <Link to="/relatorioestoque">Movimentações de Estoque</Link>
          </div>
         </fieldset>
         </div>
