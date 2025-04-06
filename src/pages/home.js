@@ -10,7 +10,7 @@ function Home() {
         <div  className="itens">
           <div className="subitens">
          <Link to="/cad_produtos">Cadastrar Produtos</Link>
-         <Link to="/cad_fornecedores">Cadastrar Fornecedor</Link>
+         <Link to="/cad_fornecedores">Cadastrar Fornecedores</Link>
          </div>
          <div className="subitens">
          <Link to="/cad_clientes">Cadastrar Clientes</Link>
