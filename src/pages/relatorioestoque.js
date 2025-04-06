@@ -5,7 +5,7 @@ export default function StockMovements() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch("http://localhost:5000/movimentacoes")
+    fetch("/api/movimentacoes")
       .then((response) => {
         if (!response.ok) {
           throw new Error("Erro ao carregar os dados");
