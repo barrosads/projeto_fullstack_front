@@ -1,67 +1,54 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import { useEffect, useState } from "react";
 
-const ListagemMovimentacoes = () => {
-  const [movimentacoes, setMovimentacoes] = useState([]);
-  const [loading, setLoading] = useState(true);
+export default function StockMovements() {
+  const [movements, setMovements] = useState([]);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    // Função para buscar as movimentações do estoque
-    const fetchMovimentacoes = async () => {
-      try {
-        const response = await axios.get('/api/estoquemovimentacao');
-        setMovimentacoes(response.data); // Armazena os dados da resposta
-      } catch (error) {
-        setError('Erro ao carregar as movimentações.');
-        console.error('Erro:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchMovimentacoes();
+    fetch("http://localhost:5000/movimentacoes")
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Erro ao carregar os dados");
+        }
+        return response.json();
+      })
+      .then((data) => setMovements(data))
+      .catch((err) => setError(err.message));
   }, []);
-
-  if (loading) {
-    return <div>Carregando...</div>;
-  }
-
-  if (error) {
-    return <div>{error}</div>;
-  }
 
   return (
     <div>
-      <h1>Movimentações de Estoque</h1>
-      {movimentacoes.length > 0 ? (
-        <table>
+      <h2>Movimentações de Estoque</h2>
+      {error ? (
+        <p style={{ color: "red" }}>{error}</p>
+      ) : (
+        <table border="1">
           <thead>
             <tr>
               <th>ID</th>
-              <th>Tipo</th>
-              <th>Quantidade</th>
               <th>Produto</th>
+              <th>Quantidade</th>
               <th>Data</th>
             </tr>
           </thead>
           <tbody>
-            {movimentacoes.map((movimentacao) => (
-              <tr key={movimentacao.id}>
-                <td>{movimentacao.id}</td>
-                <td>{movimentacao.tipo}</td>
-                <td>{movimentacao.quantidade}</td>
-                <td>{movimentacao.produto.nome}</td>
-                <td>{new Date(movimentacao.createdAt).toLocaleDateString()}</td>
+            {movements.length > 0 ? (
+              movements.map((mov) => (
+                <tr key={mov.id}>
+                  <td>{mov.id}</td>
+                  <td>{mov.produto || "N/A"}</td>
+                  <td>{mov.quantidade}</td>
+                  <td>{mov.data ? new Date(mov.data).toLocaleDateString() : "Data inválida"}</td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="4">Nenhum dado disponível</td>
               </tr>
-            ))}
+            )}
           </tbody>
         </table>
-      ) : (
-        <div>Não há movimentações registradas.</div>
       )}
     </div>
   );
-};
-
-export default ListagemMovimentacoes;
+}
