@@ -16,6 +16,7 @@
   .tituloform{
     color: black;
   }
+  
   h1 {
     text-align: center;
   }
@@ -47,8 +48,14 @@
     
   }
 
+.titulomovi{
+    margin-bottom: 15px;
+    color:black;
+}
+
   form input,
-  form textarea {
+  form textarea,
+  form select {
     width: 100%;
     padding: 8px;
     margin-top: 5px;
@@ -59,7 +66,7 @@
   
   button {
     padding: 10px;
-    background-color: rgb(30, 209, 156);
+    background-color: rgb(7, 64, 47);
     color: white;
     border: none;
     cursor: pointer;
@@ -72,4 +79,7 @@
   button:hover {
     background-color: #45a049;
   }
-  
+  .botoes{
+    display: flex;
+    flex-direction: column;
+  }
