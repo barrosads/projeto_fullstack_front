@@ -38,7 +38,7 @@ const CadastroMovimentacaoEstoque = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post('/api/estoque/movimentacao', formData);
+      const response = await axios.post('/api/estoquemovimentacao', formData);
       alert('Movimentação registrada com sucesso!');
       console.log(response.data); // Exibe a resposta da API
     } catch (error) {
