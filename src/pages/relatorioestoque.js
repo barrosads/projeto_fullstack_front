@@ -1,66 +1,67 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
-const EstoqueMovimentacoes = () => {
+const ListagemMovimentacoes = () => {
   const [movimentacoes, setMovimentacoes] = useState([]);
-  const [produtos, setProdutos] = useState({});
-  const [erro, setErro] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchData = async () => {
+    // Função para buscar as movimentações do estoque
+    const fetchMovimentacoes = async () => {
       try {
-        const movRes = await axios.get("http://localhost:5000/api/movimentacoes");
-        const prodRes = await axios.get("http://localhost:5000/api/produtos");
-
-        const produtosMap = prodRes.data.reduce((map, prod) => {
-          map[prod.id] = prod.nome;
-          return map;
-        }, {});
-
-        setMovimentacoes(movRes.data);
-        setProdutos(produtosMap);
+        const response = await axios.get('/api/estoquemovimentacao');
+        setMovimentacoes(response.data); // Armazena os dados da resposta
       } catch (error) {
-        setErro("Erro ao carregar os dados.");
+        setError('Erro ao carregar as movimentações.');
+        console.error('Erro:', error);
+      } finally {
+        setLoading(false);
       }
     };
-    fetchData();
+
+    fetchMovimentacoes();
   }, []);
+
+  if (loading) {
+    return <div>Carregando...</div>;
+  }
+
+  if (error) {
+    return <div>{error}</div>;
+  }
 
   return (
     <div>
-      <h2>Movimentaçõesddd de Estoque</h2>
-      {erro ? (
-        <p>{erro}</p>
-      ) : (
-        <table border="1">
+      <h1>Movimentações de Estoque</h1>
+      {movimentacoes.length > 0 ? (
+        <table>
           <thead>
             <tr>
               <th>ID</th>
-              <th>Produto</th>
+              <th>Tipo</th>
               <th>Quantidade</th>
+              <th>Produto</th>
               <th>Data</th>
             </tr>
           </thead>
           <tbody>
-            {movimentacoes.length === 0 ? (
-              <tr>
-                <td colSpan="4">Nenhuma movimentação encontrada.</td>
+            {movimentacoes.map((movimentacao) => (
+              <tr key={movimentacao.id}>
+                <td>{movimentacao.id}</td>
+                <td>{movimentacao.tipo}</td>
+                <td>{movimentacao.quantidade}</td>
+                <td>{movimentacao.produto.nome}</td>
+                <td>{new Date(movimentacao.createdAt).toLocaleDateString()}</td>
               </tr>
-            ) : (
-              movimentacoes.map((mov) => (
-                <tr key={mov.id}>
-                  <td>{mov.id}</td>
-                  <td>{produtos[mov.produto_id] || "Desconhecido"}</td>
-                  <td>{mov.quantidade}</td>
-                  <td>{new Date(mov.createdAt).toLocaleDateString("pt-BR")}</td>
-                </tr>
-              ))
-            )}
+            ))}
           </tbody>
         </table>
+      ) : (
+        <div>Não há movimentações registradas.</div>
       )}
     </div>
   );
 };
 
-export default EstoqueMovimentacoes;
+export default ListagemMovimentacoes;
