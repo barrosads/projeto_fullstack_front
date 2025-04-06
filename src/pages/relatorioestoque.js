@@ -1,29 +1,34 @@
 import React, { useEffect, useState } from "react";
+import axios from "axios";
 
-const MovimentacoesEstoque = () => {
+const EstoqueMovimentacoes = () => {
   const [movimentacoes, setMovimentacoes] = useState([]);
+  const [produtos, setProdutos] = useState({});
   const [erro, setErro] = useState(null);
 
   useEffect(() => {
-    fetch("/api/movimentacoes") // Substitua pelo seu endpoint real
-      .then((res) => res.json())
-      .then((data) => setMovimentacoes(data))
-      .catch((err) => setErro("Erro ao carregar os dados."));
-  }, []);
+    const fetchData = async () => {
+      try {
+        const movRes = await axios.get("http://localhost:5000/api/movimentacoes");
+        const prodRes = await axios.get("http://localhost:5000/api/produtos");
 
-  const formatarData = (dataISO) => {
-    if (!dataISO) return "Data inválida";
-    const data = new Date(dataISO);
-    return data.toLocaleDateString("pt-BR", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric"
-    });
-  };
+        const produtosMap = prodRes.data.reduce((map, prod) => {
+          map[prod.id] = prod.nome;
+          return map;
+        }, {});
+
+        setMovimentacoes(movRes.data);
+        setProdutos(produtosMap);
+      } catch (error) {
+        setErro("Erro ao carregar os dados.");
+      }
+    };
+    fetchData();
+  }, []);
 
   return (
     <div>
-      <h2>Movimentações de Estoque</h2>
+      <h2>Movimentaçõesddd de Estoque</h2>
       {erro ? (
         <p>{erro}</p>
       ) : (
@@ -31,22 +36,26 @@ const MovimentacoesEstoque = () => {
           <thead>
             <tr>
               <th>ID</th>
-              <th>Tipo</th>
+              <th>Produto</th>
               <th>Quantidade</th>
-              <th>Produto ID</th>
               <th>Data</th>
             </tr>
           </thead>
           <tbody>
-            {movimentacoes.map((mov) => (
-              <tr key={mov.id}>
-                <td>{mov.id}</td>
-                <td>{mov.tipo}</td>
-                <td>{mov.quantidade}</td>
-                <td>{mov.produto_id}</td>
-                <td>{formatarData(mov.createdAt)}</td>
+            {movimentacoes.length === 0 ? (
+              <tr>
+                <td colSpan="4">Nenhuma movimentação encontrada.</td>
               </tr>
-            ))}
+            ) : (
+              movimentacoes.map((mov) => (
+                <tr key={mov.id}>
+                  <td>{mov.id}</td>
+                  <td>{produtos[mov.produto_id] || "Desconhecido"}</td>
+                  <td>{mov.quantidade}</td>
+                  <td>{new Date(mov.createdAt).toLocaleDateString("pt-BR")}</td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       )}
@@ -54,4 +63,4 @@ const MovimentacoesEstoque = () => {
   );
 };
 
-export default MovimentacoesEstoque;
+export default EstoqueMovimentacoes;
